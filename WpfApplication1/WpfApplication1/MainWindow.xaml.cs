@@ -5,6 +5,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using Microsoft.Kinect;
 using System.Windows.Media.Imaging;
+using System.Windows.Input;
 
 namespace KinectApp
 {
@@ -13,6 +14,8 @@ namespace KinectApp
         private KinectSensor kinectSensor;
         private ColorFrameReader colorFrameReader;
         private BodyFrameReader bodyFrameReader;
+        private double screenWidth;
+        private double screenHeight;
 
         public MainWindow()
         {
@@ -32,6 +35,10 @@ namespace KinectApp
 
                 bodyFrameReader = kinectSensor.BodyFrameSource.OpenReader();
                 bodyFrameReader.FrameArrived += BodyFrameReader_FrameArrived;
+
+                screenWidth = SystemParameters.PrimaryScreenWidth;
+                screenHeight = SystemParameters.PrimaryScreenHeight;
+
             }
         }
 
@@ -55,6 +62,36 @@ namespace KinectApp
                 kinectSensor = null;
             }
         }
+
+        private Point mousePosition;
+        private Size boxSize;
+
+        private void Box_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            mousePosition = e.GetPosition(null);
+            boxSize = new Size(Box.ActualWidth, Box.ActualHeight);
+            Box.CaptureMouse();
+        }
+
+        private void Box_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (Box.IsMouseCaptured)
+            {
+                Point currentPosition = e.GetPosition(null);
+                double deltaX = currentPosition.X - mousePosition.X;
+                double deltaY = currentPosition.Y - mousePosition.Y;
+                double newWidth = Math.Max(boxSize.Width + deltaX, 0);
+                double newHeight = Math.Max(boxSize.Height + deltaY, 0);
+                Box.Width = newWidth;
+                Box.Height = newHeight;
+            }
+        }
+
+        private void Box_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            Box.ReleaseMouseCapture();
+        }
+
 
         private void ColorFrameReader_FrameArrived(object sender, ColorFrameArrivedEventArgs e)
         {
@@ -80,10 +117,12 @@ namespace KinectApp
                     Body[] bodies = new Body[bodyFrame.BodyCount];
                     bodyFrame.GetAndRefreshBodyData(bodies);
 
+                    bool isBodyTracked = false;
                     foreach (Body body in bodies)
                     {
                         if (body.IsTracked)
                         {
+                            isBodyTracked = true;
                             foreach (Joint joint in body.Joints.Values)
                             {
                                 if (joint.TrackingState == TrackingState.Tracked)
@@ -106,6 +145,15 @@ namespace KinectApp
                             }
                         }
                     }
+
+                    if (isBodyTracked)
+                    {
+                        Box.Visibility = Visibility.Collapsed;
+                    }
+                    else
+                    {
+                        Box.Visibility = Visibility.Visible;
+                    }
                 }
             }
         }
@@ -114,23 +162,33 @@ namespace KinectApp
         {
             CoordinateMapper coordinateMapper = kinectSensor.CoordinateMapper;
 
-            DepthSpacePoint depthSpacePoint = coordinateMapper.MapCameraPointToDepthSpace(joint.Position);
+            ColorSpacePoint colorSpacePoint = coordinateMapper.MapCameraPointToColorSpace(joint.Position);
 
-            double x = depthSpacePoint.X + 60; // Add 50 to shift the joint to the right
-            double y = depthSpacePoint.Y + 10;
+            double x = colorSpacePoint.X;
+            double y = colorSpacePoint.Y - 30;
 
-            Ellipse ellipse = new Ellipse
+            if (joint.JointType == JointType.HandRight)
             {
-                Width = 10,
-                Height = 10,
-                Fill = new SolidColorBrush(color)
-            };
+                // Set the mouse position
+                double mouseY = screenHeight * y / ColorImage.ActualHeight;
+                double mouseX = screenWidth * x / ColorImage.ActualWidth;
+                System.Windows.Forms.Cursor.Position = new System.Drawing.Point((int)mouseX, (int)mouseY);
+            }
+            else
+            {
+                // Draw the joint as before
+                Ellipse ellipse = new Ellipse
+                {
+                    Width = 10,
+                    Height = 10,
+                    Fill = new SolidColorBrush(color)
+                };
 
-            Canvas.SetLeft(ellipse, x - ellipse.Width / 2);
-            Canvas.SetTop(ellipse, y - ellipse.Height / 2);
+                Canvas.SetLeft(ellipse, x - ellipse.Width / 2);
+                Canvas.SetTop(ellipse, y - ellipse.Height / 2);
 
-            SkeletonCanvas.Children.Add(ellipse);
+                SkeletonCanvas.Children.Add(ellipse);
+            }
         }
-
     }
 }
