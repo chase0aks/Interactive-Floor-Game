@@ -1,53 +1,45 @@
-# KinectApp
+# Kinect-HTML Interaction with Ripple Effect
 
 ## Overview
 
-The KinectApp is a Windows application designed to interact with a Kinect sensor. It enables users to control their computer interface using hand gestures and body movements. This application serves as a demonstration of how to integrate Kinect sensor capabilities with a graphical user interface.
+This project combines Kinect technology with HTML to create an interactive experience. The Kinect sensor is used to control an HTML webpage, and a jQuery ripple effect enhances the visual experience. By moving your body in front of the Kinect sensor, you can trigger various interactions on the webpage.
 
 ## Features
 
-1. **Body Tracking**: The KinectApp tracks the movements of the user's body, including hand movements.
+### Kinect Sensor Integration
 
-2. **Hand Gesture Recognition**: Recognizes various hand gestures for controlling the on-screen interface.
+- Utilizes a Kinect sensor to detect body movements and gestures.
+- Translates Kinect sensor data into actions on the HTML webpage.
 
-3. **Graphical Interface**: Displays a graphical user interface (GUI) that responds to user gestures.
+### HTML Webpage with Ripple Effect
 
-4. **Real-time Feedback**: Provides real-time feedback on the screen based on user's body and hand movements.
+- Displays an HTML webpage with a beautiful ripple effect background.
+- Enhances user experience with visual effects.
+- The background image is responsive, covering the entire viewport.
 
-5. **Interactive Elements**: Users can use hand gestures to interact with on-screen elements such as buttons and menus.
+### Interactive Trash Images
 
-6. **User-friendly**: The application offers an intuitive and user-friendly interface for seamless interaction.
+- Multiple trash images are displayed on the webpage.
+- Clicking on a trash image triggers a dynamic animation, repositioning the image randomly within the viewport.
 
-7. **Exit**: Users can gracefully exit the application by closing the application window.
+### Start Button
+
+- A "Start" button is provided on the webpage.
+- Hovering over the button reveals it, and moving the mouse away hides it.
+- The button can be clicked to initiate interactions or reveal the trash images.
 
 ## Getting Started
 
-To use the KinectApp, follow these steps:
+To experience this interactive webpage, follow these steps:
 
-1. **Install the Kinect Sensor**:
-   - Ensure that you have a compatible Kinect sensor device.
-   - Connect the Kinect sensor to your computer.
+1. **Set Up Kinect**: Ensure that you have a working Kinect sensor and the necessary drivers installed on your system.
 
-2. **Launch the Application**:
-   - Run the `KinectApp.exe` executable to start the application.
+2. **Clone or Download**: Clone this repository or download the HTML and JavaScript files.
 
-3. **Interact with the Application**:
-   - Use body movements and hand gestures in front of the Kinect sensor to interact with the graphical interface displayed on your screen.
+3. **Open the HTML File**: Open the `index.html` file in a web browser that supports the necessary features, such as HTML5 and jQuery.
 
-## Dependencies
+4. **Interact with Kinect**: Position yourself in front of the Kinect sensor, and move your body to interact with the webpage.
 
-The KinectApp relies on the following components:
-
-- Kinect Sensor: A compatible Kinect sensor device is required to use this application.
-
-## License
-
-This project is provided under the MIT License. See the `LICENSE` file for detailed licensing information.
-
-## Support
-
-For any issues or inquiries, please contact the project maintainer at [email address].
-
-## Enjoy KinectApp
+## Enjoy the Interactive Experience
 
 Explore and interact with your computer interface using the Kinect sensor with the KinectApp. Discover the possibilities of gesture-based interaction and real-time feedback.
