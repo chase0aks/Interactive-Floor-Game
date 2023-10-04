@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Ripple Effect</title>
+	<style>
+		* {
+			padding: 0;
+			margin: 0;
+		}
+
+		.background {
+			position: relative;
+			width: 100%;
+			height: 100vh;
+			overflow: hidden;
+			background-image: url(images/sea1.jpg);
+			background-size: cover;
+			background-position: center center;
+			object-fit: cover;
+		}
+
+
+		.trash {
+			display: none;
+			position: fixed;
+			max-width: 20%;
+			max-height: 20%;
+			overflow: hidden;
+			filter: drop-shadow(0px 0px 0px rgba(0, 0, 0, 20));
+		}
+
+		#myButton {
+			display: none;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			border: none;
+			padding: 15px;
+			color: black;
+			font-size: 24px;
+			cursor: pointer;
+			transition: all 0.2s ease-in-out;
+			letter-spacing: 1px;
+			background-color: #75ffff;
+			box-shadow: 0px 2px 5px #666;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="background"></div>
+	<div id="myButton">
+		<span>Start</span>
+	</div>
+
+	<div class="trash-container">
+		<img class="trash" src="images/trash0.png">
+		<img class="trash" src="images/trash1.png">
+		<img class="trash" src="images/trash2.png">
+		<img class="trash" src="images/trash3.png">
+		<img class="trash" src="images/trash4.png">
+	</div>
+
+	<script>var trashImages = document.querySelectorAll('.trash');
+		var viewportWidth = window.innerWidth;
+		var viewportHeight = window.innerHeight;
+
+		for (var i = 0; i < trashImages.length; i++) {
+			var trashImage = trashImages[i];
+			var trashWidth = 250;
+			var trashHeight = 250;
+
+			// Calculate a dynamic position multiplier based on the aspect ratio of the viewport and the trash image size
+			var aspectRatio = viewportWidth / viewportHeight;
+			var imageAspectRatio = trashWidth / trashHeight;
+			var positionMultiplier = imageAspectRatio > aspectRatio ? aspectRatio / imageAspectRatio : 1;
+
+			// Calculate random positions using the dynamic position multiplier
+			var maxRandomLeft = viewportWidth - trashWidth * positionMultiplier;
+			var maxRandomTop = viewportHeight - trashHeight * positionMultiplier;
+			var randomTop = Math.random() * (maxRandomTop - trashHeight * positionMultiplier) + trashHeight * positionMultiplier;
+			var randomLeft = Math.random() * (maxRandomLeft - trashWidth * positionMultiplier) + trashWidth * positionMultiplier;
+
+			trashImage.style.top = randomTop + "px";
+			trashImage.style.left = randomLeft + "px";
+
+			trashImage.addEventListener('click', function (event) {
+				//event.target.style.transition = 'all 1s ease-in-out'; // add a CSS transition property
+				var trashWidth = event.target.clientWidth;
+				var trashHeight = event.target.clientHeight;
+
+				// Calculate random positions using the dynamic position multiplier
+				var maxRandomLeft = viewportWidth - trashWidth * positionMultiplier;
+				var maxRandomTop = viewportHeight - trashHeight * positionMultiplier;
+				var randomTop = Math.random() * (maxRandomTop - trashHeight * positionMultiplier) + trashHeight * positionMultiplier;
+				var randomLeft = Math.random() * (maxRandomLeft - trashWidth * positionMultiplier) + trashWidth * positionMultiplier;
+
+				event.target.style.top = randomTop + "px";
+				event.target.style.left = randomLeft + "px";
+			});
+		}
+	</script>
+
+	<script src="ripple.js"></script>
+	<script>
+		var timeout;
+		var mouseMoving = false;
+		var mouseStillTimeout;
+		var buttonHoverTimeout;
+		var buttonVisible = true;
+
+		$(document).ready(function () {
+			$(".background").ripples({
+				resolution: 200,
+				perturbance: 0.004,
+			});
+
+			$(document).on('mousemove', function () {
+				if (buttonVisible) {
+					$("#myButton").stop(true, true).fadeIn();
+				}
+
+				clearTimeout(mouseStillTimeout);
+				mouseMoving = true;
+				mouseStillTimeout = setTimeout(function () {
+					mouseMoving = false;
+					$(".trash").fadeOut(0);
+					//$(".background").ripples("play");
+				}, 3000);
+			});
+
+			$("#myButton").hover(function () {
+				clearTimeout(buttonHoverTimeout);
+				buttonHoverTimeout = setTimeout(function () {
+					$("#myButton").fadeOut();
+					buttonVisible = false;
+					$(".trash").fadeIn(0);
+					//$(".background").ripples("pause");
+				}, 2000);
+			}, function () {
+				clearTimeout(buttonHoverTimeout);
+			});
+
+			setInterval(function () {
+				if (!mouseMoving && !buttonVisible) {
+					$("#myButton").fadeIn(0);
+					buttonVisible = true;
+				}
+			}, 500);
+		});
+	</script>
+</body>
+
+</html>
