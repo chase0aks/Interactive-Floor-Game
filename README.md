@@ -1,8 +1,8 @@
-# Kinect-HTML Interactive Experience
+# Interactive Floor Game
 
 ## Overview
 
-The Kinect-HTML Interactive Experience project combines Kinect technology with HTML to create an engaging and interactive user experience. This project uses a Kinect sensor to detect body movements and gestures, translating them into actions on an HTML webpage. Users can interact with the webpage by moving their bodies in front of the Kinect sensor, triggering various animations and visual effects.
+The Interactive Floor Game project combines Kinect technology with HTML to create an engaging and interactive user experience. This project uses a Kinect sensor to detect body movements and gestures, translating them into actions on an HTML webpage. Users can interact with the webpage by moving their bodies in front of the Kinect sensor, triggering various animations and visual effects.
 
 ## Features
 
